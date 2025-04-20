@@ -25,10 +25,7 @@ class Nutrition:
             for word in self.responses:
                 if word in part.text:
                     return self.responses[word]
-        for item in txt.ents:
-            for word in self.responses:
-                if word in item.text:
-                    return self.responses[word]
+        
 
         for token in txt:
             if token.lemma_ in self.responses:
@@ -41,7 +38,7 @@ if __name__ == "__main__":
     print("Hello! I am pleased to be your Nutrition Bot! Please ask me any nutrition related question. Type exit to leave this chat. :)")
     while True:
         response = input("You: ")
-        if response.lower() == "exit":
+        if "exit" in response.lower():
             print("I am glad I could help you today! Stay healthy :)")
             break
         print("Nutrition Bot: " + aiBot.aiResponse(response))
