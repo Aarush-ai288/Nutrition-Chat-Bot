@@ -1,0 +1,47 @@
+import spacy
+import os
+try:
+    nlp = spacy.load("en_core_web_sm")
+except:
+    os.system("python -m spacy download en_core_web_sm")
+    nlp = spacy.load("en_core_web_sm")
+class Nutrition:
+    def __init__(self):
+        self.nlp = spacy.load("en_core_web_sm")
+        self.responses = {
+
+            "snack": "A healthy snack includes fruits (apples, bananas), vegetables (broccoli), whole wheat crackers, and even popcorn!",
+            "breakfast": "Healthy breakfast items include oatmeal, eggs, toast, and fruit bowls.",
+            "lunch": "If you want to eat a healthy lunch, you should eat brown rice, salad, spaghetti/pasta with lots of vegetables and protein, and soup with whole grain bread.",
+            "dinner": "Healthy dinner options include stir fry with vegetables, a grilled chicken dish, and Baked Cod with Lemon and Herbs.",
+            "drink": "You should always drink 6 glasses of water a day. In addition, protein shakes, juice with limited sugar, and milk are other healthy drinks.",
+            "restaurant": "Restaurants that have healthy food include Panera, Salad Bar, and Jason's Deli. Try to avoid fast-food restaurants like McDonald's and Popeyes.",
+            "unhealthy": "You should avoid excess amounts of food that is high in fats, sugars, and carbohydrates. Examples include fast food, excess amounts of rice, and candy."
+        }
+
+    def aiResponse(self, text):
+        txt = self.nlp(text.lower())
+        for part in txt.noun_chunks:
+            for word in self.responses:
+                if word in part.text:
+                    return self.responses[word]
+        for item in txt.ents:
+            for word in self.responses:
+                if word in item.text:
+                    return self.responses[word]
+
+        for token in txt:
+            if token.lemma_ in self.responses:
+                return self.responses[token.lemma_]
+
+        return "Please ask me about anything nutrition-related."  
+
+if __name__ == "__main__":
+    aiBot = Nutrition()
+    print("Hello! I am pleased to be your Nutrition Bot! Please ask me any nutrition related question. Type exit to leave this chat. :)")
+    while True:
+        response = input("You: ")
+        if response.lower() == "exit":
+            print("I am glad I could help you today! Stay healthy :)")
+            break
+        print("Nutrition Bot: " + aiBot.aiResponse(response))
